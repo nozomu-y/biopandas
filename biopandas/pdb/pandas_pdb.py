@@ -555,6 +555,13 @@ class PandasPdb(object):
                         if len(dfs[r][c].values[idx]) > 8:
                             dfs[r][c].values[idx] = \
                                 str(dfs[r][c].values[idx]).strip()
+                # fix issue where occupancy, b_factor with three or more digits would
+                # cause issues because the columns become too wide
+                if c in {'occupancy', 'b_factor'}:
+                    for idx in range(dfs[r][c].values.shape[0]):
+                        if len(dfs[r][c].values[idx]) > 6:
+                            dfs[r][c].values[idx] = \
+                                str(dfs[r][c].values[idx]).strip()
                 if c in {'line_idx', 'OUT'}:
                     pass
                 elif r in {'ATOM', 'HETATM'} and c not in pdb_df_columns:
